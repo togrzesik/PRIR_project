@@ -1,101 +1,64 @@
-﻿#include <mpi.h>
-#include <cstdlib>
-#include <stdio.h>
-#include <string.h>
+﻿#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <mpi.h>
+#include <omp.h>
+using namespace std;
 
-#define FILL_MODE_NOT_RANDOM 0
-#define FILL_MODE_RANDOM 1
+/*int KthLargest1(vector<int>& nums, int k)
+{
+    int n = nums.size();
+    sort(nums.begin(), nums.end());
+    return nums[n - k];
+} */
 
+int KthLargest2(vector<int>& nums, int k)
+{
+    priority_queue<int, vector<int>, greater<int> > pq;
 
-int initVector(double* vector, unsigned int vSize, unsigned int fillMode, unsigned int procIndex) {
-
-    for (unsigned int i = 0; i < vSize; i++) {
-        if (fillMode == FILL_MODE_RANDOM) {
-            vector[i] = rand() / (double)RAND_MAX;
-        }
-        else {
-            vector[i] = procIndex;
+    for (int i : nums)
+    {
+        if (pq.size() < k)
+            pq.push(i);
+        else
+        {
+            if (pq.top() < i)
+            {
+                pq.pop();
+                pq.push(i);
+            }
         }
     }
-    return 0;
+
+    return pq.top();
 }
 
+int main(int argc, char* argv[])
+{
+    vector<int> nums;
 
-int main(int argc, char** argv) {
-
+    int k = 3;
+    int my_rank;
+    MPI_Status status;
     MPI_Init(&argc, &argv);
-
-    unsigned int vSize = 2000;
-    if (argc == 2) {
-        vSize = atoi(argv[1]);
-    }
-
-    unsigned int fillMode = FILL_MODE_NOT_RANDOM;
-    if (argc == 3) {
-        if (strcmp("-random", argv[3])) {
-            fillMode = FILL_MODE_RANDOM;
-        }
-    }
-
-    int procCount, procIndex;
-
-
-    MPI_Comm_size(MPI_COMM_WORLD, &procCount);
-    MPI_Comm_rank(MPI_COMM_WORLD, &procIndex);
-
-
-
+    MPI_Comm_size(MPI_COMM_WORLD, &k);
+    MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
     double startParallel, stopParallel;
     startParallel = MPI_Wtime();
+    #pragma omp parallel for num_threads(k)
+    for (int i(0); i < 10; i++)
+        nums.push_back(rand() % 100);
 
+    cout << "Array:";
+    for (int i : nums)
+        cout << i << "\n";
 
-    double* dataVector;
-    double procMax;
-    double calculatedMax;
-    double realMax;
+    //cout << k << " Largest1:" << KthLargest1(nums, k) << endl;
 
-    dataVector = (double*)malloc(vSize * sizeof(double));
-    realMax = initVector(dataVector, vSize, fillMode, procIndex);
-
-
-    if (procIndex == 0) {
-        printf("Array size per process is %u\n", vSize);
-    }
-
-
-    procMax = dataVector[0];
-    for (unsigned int i = 0; i < vSize; i++) {
-        #pragma omp critical
-        if (dataVector[i] > procMax) {
-            procMax = dataVector[i];
-        }
-    }
-
-    MPI_Reduce(&procMax, &calculatedMax, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
-
-    if (procIndex == 0) {
-        if (fillMode == FILL_MODE_NOT_RANDOM) {
-            if (calculatedMax == procCount - 1) {
-                printf("Max parallel = %f\n", calculatedMax);
-            }
-            else {
-                printf("No Success Calculation Maximum! You must recalculate this!");
-                return 1;
-            }
-        }
-    }
-
-
+    cout << k << " Largest2:" << KthLargest2(nums, k) << endl;
     stopParallel = MPI_Wtime();
-    if (procIndex == 0) {
-        printf("Execution time= %f, process count= %d, size= %u\n",
-            stopParallel - startParallel,
-            procCount,
-            vSize
-        );
-    }
-
+    double Diff = stopParallel - startParallel;
+    cout << "Execution time: " << Diff;
     MPI_Finalize();
-
-    return 0;
 }
