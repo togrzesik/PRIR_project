@@ -1,4 +1,4 @@
 ﻿  MPI_OPENMP.cpp
 C:\Users\user\source\repos\MPI_OPENMP\MPI_OPENMP.cpp(22,23): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Users\user\source\repos\MPI_OPENMP\MPI_OPENMP.cpp(43,16): warning C4101: "status": lokalna zmienna, do której nie istnieje odwołanie
+C:\Users\user\source\repos\MPI_OPENMP\MPI_OPENMP.cpp(45,16): warning C4101: "status": lokalna zmienna, do której nie istnieje odwołanie
   MPI_OPENMP.vcxproj -> C:\Users\user\source\repos\MPI_OPENMP\Debug\MPI_OPENMP.exe

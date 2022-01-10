@@ -1,2 +1,4 @@
 ﻿  OPENMP.cpp
+C:\Users\user\source\repos\OPENMP\OPENMP.cpp(23,23): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Users\user\source\repos\OPENMP\OPENMP.cpp(45,9): warning C4101: "my_rank": lokalna zmienna, do której nie istnieje odwołanie
   OPENMP.vcxproj -> C:\Users\user\source\repos\OPENMP\Debug\OPENMP.exe

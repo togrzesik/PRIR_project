@@ -39,23 +39,22 @@ int main(int argc, char* argv[])
     vector<int> nums;
 
     int k = 3;
+    int th = 2;
     int my_rank;
+    int silk = 2000;
     MPI_Status status;
     MPI_Init(&argc, &argv);
-    MPI_Comm_size(MPI_COMM_WORLD, &k);
+    MPI_Comm_size(MPI_COMM_WORLD, &th);
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
     double startParallel, stopParallel;
     startParallel = MPI_Wtime();
-    #pragma omp parallel for num_threads(k)
-    for (int i(0); i < 10; i++)
-        nums.push_back(rand() % 100);
+    #pragma omp parallel for num_threads(th)
+    for (int i(0); i < silk; i++)
+        nums.push_back(rand() % 10000);
 
+//    MPI_Send(&silk, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
+//    MPI_Recv(&k, 1, MPI_INT, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &status);
     cout << "Array:";
-    for (int i : nums)
-        cout << i << "\n";
-
-    //cout << k << " Largest1:" << KthLargest1(nums, k) << endl;
-
     cout << k << " Largest2:" << KthLargest2(nums, k) << endl;
     stopParallel = MPI_Wtime();
     double Diff = stopParallel - startParallel;

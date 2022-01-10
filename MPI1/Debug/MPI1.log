@@ -1,4 +1,4 @@
 ﻿  MPI1.cpp
 C:\Users\user\source\repos\MPI1\MPI1.cpp(23,23): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Users\user\source\repos\MPI1\MPI1.cpp(44,16): warning C4101: "status": lokalna zmienna, do której nie istnieje odwołanie
+C:\Users\user\source\repos\MPI1\MPI1.cpp(46,16): warning C4101: "status": lokalna zmienna, do której nie istnieje odwołanie
   MPI1.vcxproj -> C:\Users\user\source\repos\MPI1\Debug\MPI1.exe
