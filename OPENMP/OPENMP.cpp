@@ -17,7 +17,6 @@ using namespace std;
 int KthLargest2(vector<int>& nums, int k)
 {
     priority_queue<int, vector<int>, greater<int> > pq;
-
     for (int i : nums)
     {
         if (pq.size() < k)
@@ -48,9 +47,10 @@ int main(int argc, char* argv[])
         nums.push_back(rand() % 100000);
     double startParallel = 0.0, stopParallel = 0.0;
     startParallel = omp_get_wtime();
-#pragma omp parallel for num_threads(th)
-    for (int i = 0; i < th; i++)
+    for (int i = 0; i < th; i++) {
+#pragma omp parallel reduction(+:n) num_threads(th)
         KthLargest2(nums, k);
+    }
     stopParallel = omp_get_wtime();
     cout << "Array: ";
     cout << k << " Largest:" << KthLargest2(nums, k) << endl;
